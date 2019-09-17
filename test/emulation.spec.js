@@ -114,4 +114,20 @@ module.exports.addTests = function({testRunner, expect, puppeteer}) {
       expect(error.message).toBe('Unsupported media type: bad');
     });
   });
+
+  describe('Page.emulateTimezone', function() {
+    it('should work', async({page, server}) => {
+      await page.emulateTimezone('America/Jamaica');
+      expect(await page.evaluate(() => new Date(1479579154987).toString())).toBe('Sat Nov 19 2016 13:12:34 GMT-0500 (Eastern Standard Time)');
+
+      await page.emulateTimezone('Pacific/Honolulu');
+      expect(await page.evaluate(() => new Date(1479579154987).toString())).toBe('Sat Nov 19 2016 08:12:34 GMT-1000 (Hawaii-Aleutian Standard Time)');
+
+      await page.emulateTimezone('America/Argentina/Buenos_Aires');
+      expect(await page.evaluate(() => new Date(1479579154987).toString())).toBe('Sat Nov 19 2016 15:12:34 GMT-0300 (Argentina Standard Time)');
+
+      await page.emulateTimezone('Europe/Berlin');
+      expect(await page.evaluate(() => new Date(1479579154987).toString())).toBe('Sat Nov 19 2016 19:12:34 GMT+0100 (Central European Standard Time)');
+    });
+  });
 };
